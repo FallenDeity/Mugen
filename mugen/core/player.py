@@ -21,6 +21,14 @@ class Player(Camera):
         self.key_listener()
         super().update()
 
+    def event_listener(self, event: pygame.event.Event) -> None:
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == pygame.BUTTON_LEFT:
+                self.app._scene.world.chunk_manager.set_voxel()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                self.app._scene.world.chunk_manager.toggle_mode()
+
     def mouse_listener(self) -> None:
         dx, dy = pygame.mouse.get_rel()
         self.rotate_yaw(PLAYER.MOUSE_SENSITIVITY * dx if dx else 0)

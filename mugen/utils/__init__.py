@@ -1,6 +1,6 @@
-from .constants import CAMERA, CHUNK, PLAYER, SHADERS, TEXTURES, WINDOW
+from .constants import CAMERA, CHUNK, PLAYER, SHADERS, TEXTURES, WINDOW, WORLD
 from .logging import Logger
-from .mesh_builder import build_chunk_mesh
+from .mesh_builder import build_chunk_mesh, get_chunk_idx
 
 __all__: tuple[str, ...] = (
     "WINDOW",
@@ -9,6 +9,8 @@ __all__: tuple[str, ...] = (
     "PLAYER",
     "CHUNK",
     "TEXTURES",
+    "WORLD",
     "Logger",
     "build_chunk_mesh",
+    "get_chunk_idx",
 )

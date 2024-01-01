@@ -12,6 +12,7 @@ __all__: tuple[str, ...] = (
     "CHUNK",
     "PLAYER",
     "TEXTURES",
+    "WORLD",
 )
 
 
@@ -39,11 +40,21 @@ class CAMERA:
     PITCH_LIMIT = glm.radians(89.0)
 
 
+class WORLD:
+    WIDTH = 10
+    HEIGHT = 3
+    DEPTH = WIDTH
+    AREA = WIDTH * DEPTH
+    VOLUME = AREA * HEIGHT
+    CENTER_XZ = WIDTH * CHUNK.H_SIZE
+    CENTER_Y = HEIGHT * CHUNK.SIZE
+
+
 class PLAYER:
-    SPEED = 5.0
-    ROTATION_SPEED = 0.03
-    POSITION = glm.vec3(CHUNK.H_SIZE, CHUNK.SIZE, 1.5 * CHUNK.SIZE)
-    MOUSE_SENSITIVITY = 0.003
+    SPEED = 12.0
+    ROTATION_SPEED = 3
+    MOUSE_SENSITIVITY = 0.002
+    POSITION = glm.vec3(WORLD.CENTER_XZ, WORLD.CENTER_Y, WORLD.CENTER_XZ)
 
 
 class SHADERS(enum.Enum):
@@ -51,6 +62,8 @@ class SHADERS(enum.Enum):
     QUAD_FRAG = pathlib.Path("assets/shaders/quad.frag")
     CHUNK_VERT = pathlib.Path("assets/shaders/chunk.vert")
     CHUNK_FRAG = pathlib.Path("assets/shaders/chunk.frag")
+    CUBE_VERT = pathlib.Path("assets/shaders/cube.vert")
+    CUBE_FRAG = pathlib.Path("assets/shaders/cube.frag")
 
     def __get__(self, instance: t.Any, owner: t.Type[t.Any]) -> pathlib.Path:
         return self.value

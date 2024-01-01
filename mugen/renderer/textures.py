@@ -23,8 +23,8 @@ class Textures:
 
     def _load_texture(self, path: str) -> moderngl.Texture:
         image = pygame.image.load(path)
-        image = pygame.transform.flip(image, flip_x=True, flip_y=True)
-        texture = self.ctx.texture(image.get_size(), 4, pygame.image.tostring(image, "RGBA", True))
+        image = pygame.transform.flip(image, flip_x=True, flip_y=False)
+        texture = self.ctx.texture(image.get_size(), 4, pygame.image.tostring(image, "RGBA", False))
         texture.anisotropy = 32
         texture.build_mipmaps()
         texture.filter = moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR

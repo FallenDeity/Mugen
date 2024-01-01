@@ -1,4 +1,3 @@
-import itertools
 import typing as t
 
 import glm
@@ -11,23 +10,41 @@ from ..utils import CHUNK
 if t.TYPE_CHECKING:
     from mugen import Mugen
 
+    from .world import World
+
 
 __all__: tuple[str, ...] = ("Chunk",)
 
 
 class Chunk:
-    def __init__(self, app: "Mugen") -> None:
+    mesh: ChunkMesh | None = None
+    voxels: NDArray[Shape["*, *"], UInt8] | None = None
+
+    def __init__(self, world: "World", app: "Mugen", position: tuple[int, int, int]) -> None:
         self.app = app
-        self.voxels = self._build_voxels()
-        self.mesh = ChunkMesh(chunk=self, app=self.app)
+        self.world = world
+        self.position = position
+        self._is_empty = True
+        self._model_matrix = glm.translate(glm.mat4(), glm.vec3(*self.position) * CHUNK.SIZE)
+
+    def _build_mesh(self) -> None:
+        self.mesh = ChunkMesh(self.app, self)
 
     def render(self) -> None:
-        self.mesh.render()
+        if not self._is_empty and self.mesh is not None:
+            self.mesh.program["uModel"].write(self._model_matrix)  # type: ignore
+            self.mesh.render()
 
-    @staticmethod
-    def _build_voxels() -> NDArray[Shape["*, *"], UInt8]:
+    def _build_voxels(self) -> NDArray[Shape["*, *"], UInt8]:
         _voxels = np.zeros(CHUNK.VOLUME, dtype=np.uint8)
-        for x, y, z in itertools.product(range(CHUNK.SIZE), repeat=3):
-            _noise = glm.simplex(glm.vec3(x / 10, y / 10, z / 10))
-            _voxels[x + CHUNK.SIZE * y + CHUNK.AREA * z] = glm.clamp(int(glm.mix(0, 255, _noise)), 0, 255)
+        cx, cy, cz = glm.ivec3(self.position) * CHUNK.SIZE
+        for x in range(CHUNK.SIZE):
+            for z in range(CHUNK.SIZE):
+                wx, wz = x + cx, z + cz
+                # world_height = int(glm.perlin(glm.vec2(wx, wz) / 100.0) * CHUNK.SIZE + CHUNK.SIZE)
+                world_height = int(glm.simplex(glm.vec2(wx, wz) / 100.0) * CHUNK.SIZE + CHUNK.SIZE)
+                local_height = min(world_height - cy, CHUNK.SIZE)
+                for y in range(local_height):
+                    _voxels[x + CHUNK.SIZE * z + CHUNK.AREA * y] = y + cy
+        self._is_empty = not np.any(_voxels)
         return _voxels

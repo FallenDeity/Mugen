@@ -9,9 +9,13 @@ uniform sampler2D uTexture;
 
 in vec3 voxel_color;
 in vec2 voxel_uv;
+in float shade;
 
 void main() {
     vec3 texColor = texture(uTexture, voxel_uv).rgb;
     texColor = pow(texColor, invGamma);
-    fragColor = vec4(texColor * voxel_color, 1.0);
+    texColor.rgb *= voxel_color;
+    texColor *= shade;
+    texColor = pow(texColor, gamma);
+    fragColor = vec4(texColor, 1.0);
 }

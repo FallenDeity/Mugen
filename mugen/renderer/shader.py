@@ -1,7 +1,6 @@
 import pathlib
 import typing as t
 
-import glm
 import moderngl
 
 from ..utils import SHADERS
@@ -22,11 +21,15 @@ class Shader:
 
         self._load_shaders()
 
-        _proj: moderngl.Uniform = self.get_program("CHUNK")["uProjection"]  # type: ignore
+        self._set_uniforms("CHUNK")
+        self._set_uniforms("CUBE")
+
+    def _set_uniforms(self, name: str) -> None:
+        _proj: moderngl.Uniform = self.get_program(name)["uProjection"]  # type: ignore
         _proj.write(self._player._projection)
-        _model: moderngl.Uniform = self.get_program("CHUNK")["uModel"]  # type: ignore
-        _model.write(glm.mat4())
-        _tex: moderngl.Uniform = self.get_program("CHUNK")["uTexture"]  # type: ignore
+        _view: moderngl.Uniform = self.get_program(name)["uModel"]  # type: ignore
+        _view.write(self._player._view)
+        _tex: moderngl.Uniform = self.get_program(name)["uTexture"]  # type: ignore
         _tex.value = 0
 
     def _load_shaders(self) -> None:
@@ -50,4 +53,6 @@ class Shader:
 
     def update(self) -> None:
         _view: moderngl.Uniform = self.get_program("CHUNK")["uView"]  # type: ignore
+        _view.write(self._player._view)
+        _view: moderngl.Uniform = self.get_program("CUBE")["uView"]  # type: ignore
         _view.write(self._player._view)

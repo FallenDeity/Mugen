@@ -1,5 +1,3 @@
-import typing as t
-
 import glm
 
 from ..utils import CAMERA
@@ -26,14 +24,14 @@ class Camera:
         self._front.z = glm.sin(self.yaw) * glm.cos(self.pitch)
         self._front = glm.normalize(self._front)
 
-        self._right = glm.normalize(glm.cross(self._front, self._up))
+        self._right = glm.normalize(glm.cross(self._front, glm.vec3(0, 1, 0)))
         self._up = glm.normalize(glm.cross(self._right, self._front))
 
         self._view = glm.lookAt(self.position, self.position + self._front, self._up)
 
     def rotate_pitch(self, offset: float) -> None:
         self.pitch -= offset
-        self.pitch = t.cast(float, glm.clamp(self.pitch, -CAMERA.PITCH_LIMIT, CAMERA.PITCH_LIMIT))
+        self.pitch = glm.clamp(self.pitch, -CAMERA.PITCH_LIMIT, CAMERA.PITCH_LIMIT)  # type: ignore
 
     def rotate_yaw(self, offset: float) -> None:
         self.yaw += offset

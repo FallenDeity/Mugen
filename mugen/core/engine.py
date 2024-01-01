@@ -30,7 +30,9 @@ class Mugen:
         pygame.event.set_grab(True)
         pygame.mouse.set_visible(False)
 
-        self.window = pygame.display.set_mode(WINDOW.RESOLUTION, flags=pygame.DOUBLEBUF | pygame.OPENGL)
+        self.window = pygame.display.set_mode(
+            WINDOW.RESOLUTION, flags=pygame.DOUBLEBUF | pygame.OPENGL | pygame.RESIZABLE
+        )
         pygame.display.set_caption(WINDOW.TITLE)
         pygame.display.set_icon(pygame.image.load(WINDOW.ICON))
         self._logger.info("Initialized pygame window.")
@@ -70,6 +72,7 @@ class Mugen:
     def event_handler(self, event: pygame.event.Event) -> None:
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             self._is_running = False
+        self._player.event_listener(event)
 
     def run(self) -> None:
         try:
