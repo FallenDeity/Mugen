@@ -55,4 +55,3 @@ repos:
         language: python
         stages:
           - commit
-

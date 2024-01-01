@@ -7,6 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pygame = "^2.5.2"
+moderngl = "^5.9.0"
+pyglm = "^2.7.1"
+numba = "^0.58.1"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
@@ -14,6 +19,7 @@ isort = "^5.13.2"
 ruff = "^0.1.9"
 mypy = "^1.8.0"
 pre-commit = "^3.6.0"
+nptyping = "^2.5.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -22,6 +28,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 target-version = "py311"
 line-length = 120
+ignore = ["F722"]
 
 [tool.black]
 line-length = 120
