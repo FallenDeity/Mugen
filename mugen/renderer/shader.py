@@ -3,7 +3,7 @@ import typing as t
 
 import moderngl
 
-from ..utils import SHADERS
+from ..utils import SHADERS, WORLD
 
 if t.TYPE_CHECKING:
     from mugen import Mugen
@@ -21,16 +21,24 @@ class Shader:
 
         self._load_shaders()
 
-        self._set_uniforms("CHUNK")
-        self._set_uniforms("CUBE")
+        for name in self._shaders:
+            self._set_uniforms(name)
 
     def _set_uniforms(self, name: str) -> None:
-        _proj: moderngl.Uniform = self.get_program(name)["uProjection"]  # type: ignore
-        _proj.write(self._player._projection)
-        _view: moderngl.Uniform = self.get_program(name)["uModel"]  # type: ignore
-        _view.write(self._player._view)
-        _tex: moderngl.Uniform = self.get_program(name)["uTexture"]  # type: ignore
-        _tex.value = 0
+        self.get_program(name)["uProjection"].write(self._player._projection)  # type: ignore
+        if name == "CLOUD":
+            self.get_program(name)["center"].value = WORLD.CENTER_XZ  # type: ignore
+            self.get_program(name)["cloudScale"].value = WORLD.CLOUD_SCALE  # type: ignore
+        elif name == "CHUNK" or name == "CUBE":
+            self.get_program(name)["uModel"].write(self._player._view)  # type: ignore
+            self.get_program(name)["uTexture"].value = 1 if name == "CHUNK" else 0  # type: ignore
+        elif name == "WATER":
+            self.get_program(name)["uTexture"].value = 2  # type: ignore
+            self.get_program(name)["waterArea"].value = WORLD.WATER_AREA  # type: ignore
+        if name == "CLOUD" or name == "CHUNK":
+            self.get_program(name)["bgColor"].write(WORLD.BG_COLOR)  # type: ignore
+        if name == "CHUNK" or name == "WATER":
+            self.get_program(name)["waterLine"].value = WORLD.WATER_LINE  # type: ignore
 
     def _load_shaders(self) -> None:
         self.app.logger.info("Loading shaders...")
@@ -52,7 +60,5 @@ class Shader:
         return self._shaders[name]
 
     def update(self) -> None:
-        _view: moderngl.Uniform = self.get_program("CHUNK")["uView"]  # type: ignore
-        _view.write(self._player._view)
-        _view: moderngl.Uniform = self.get_program("CUBE")["uView"]  # type: ignore
-        _view.write(self._player._view)
+        for name in self._shaders:
+            self.get_program(name)["uView"].write(self._player._view)  # type: ignore

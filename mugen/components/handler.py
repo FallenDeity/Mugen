@@ -141,3 +141,44 @@ class ChunkManager:
             voxel_id = chunk.voxels[voxel_idx]
             return voxel_id, voxel_idx, local_pos, chunk
         return 0, 0, glm.ivec3(0, 0, 0), None
+
+    def check_collision(self, direction: t.Literal["forward", "backward", "left", "right", "up", "down"]) -> bool:
+        x1, y1, z1 = self.app._player.position
+
+        dir_map = {
+            "forward": self.app._player._front,
+            "backward": -self.app._player._front,
+            "left": -self.app._player._right,
+            "right": self.app._player._right,
+            "up": self.app._player._up,
+            "down": -self.app._player._up,
+        }
+
+        x2, y2, z2 = self.app._player.position + dir_map[direction] * 3.0
+
+        current_voxel_pos = glm.ivec3(x1, y1, z1)
+
+        dx, delta_x, max_x = self._delta(x1, x2)
+        dy, delta_y, max_y = self._delta(y1, y2)
+        dz, delta_z, max_z = self._delta(z1, z2)
+
+        while not (max_x > 1.0 and max_y > 1.0 and max_z > 1.0):
+            voxel_id, _, _, _ = self.get_voxel_id(current_voxel_pos)
+            if voxel_id:
+                return True
+
+            if max_x < max_y:
+                if max_x < max_z:
+                    current_voxel_pos.x += int(dx)
+                    max_x += delta_x
+                else:
+                    current_voxel_pos.z += int(dz)
+                    max_z += delta_z
+            else:
+                if max_y < max_z:
+                    current_voxel_pos.y += int(dy)
+                    max_y += delta_y
+                else:
+                    current_voxel_pos.z += int(dz)
+                    max_z += delta_z
+        return False

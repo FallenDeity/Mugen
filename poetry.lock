@@ -486,6 +486,20 @@ files = [
 ]
 
 [[package]]
+name = "opensimplex"
+version = "0.4.5"
+description = "OpenSimplex is a noise generation function like Perlin or Simplex noise, but better."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "opensimplex-0.4.5-py3-none-any.whl", hash = "sha256:5e34f2b6f7e2d3e798d7f060b45cb1f92c02b68b6fc2626ac2a36bd53ec6c773"},
+    {file = "opensimplex-0.4.5.tar.gz", hash = "sha256:c390cf70dea97b32bd1a49ba6781e84f48dc93b1cc6c06f36d9d44c548299f90"},
+]
+
+[package.dependencies]
+numpy = ">=1.22"
+
+[[package]]
 name = "packaging"
 version = "23.2"
 description = "Core utilities for Python packages"
@@ -844,4 +858,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "c47ff1f6f20721887f61a92628ea6685be73bc152633dc4db426bc65850382e1"
+content-hash = "a192823f0b058d97876f1d7d9042c020f75bd00c007d39c4d8fd4ab48643d4b6"

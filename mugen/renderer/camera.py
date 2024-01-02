@@ -1,6 +1,7 @@
 import glm
 
 from ..utils import CAMERA
+from .frustum import Frustum
 
 __all__: tuple[str, ...] = ("Camera",)
 
@@ -17,6 +18,8 @@ class Camera:
 
         self._projection = glm.perspective(CAMERA.V_FOV, CAMERA.ASP_RATIO, CAMERA.NEAR, CAMERA.FAR)
         self._view = glm.mat4()
+
+        self.frustum = Frustum(self)
 
     def update(self) -> None:
         self._front.x = glm.cos(self.yaw) * glm.cos(self.pitch)

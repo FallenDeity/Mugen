@@ -25,7 +25,7 @@ class World:
 
     def _build_meshes(self) -> None:
         for chunk in self.chunks:
-            if chunk is not None:
+            if chunk is not None and chunk.is_on_frustum(chunk):
                 chunk._build_mesh()
 
     def _build_chunks(self) -> None:
@@ -33,12 +33,18 @@ class World:
             chunk = Chunk(world=self, app=self.app, position=(x, y, z))
             chunk_idx = x + WORLD.WIDTH * z + WORLD.AREA * y
             self.chunks[chunk_idx] = chunk
-            self.voxels[chunk_idx] = chunk._build_voxels()
-            chunk.voxels = self.voxels[chunk_idx]
+            if chunk.is_on_frustum(chunk):
+                self.voxels[chunk_idx] = chunk._build_voxels()
+                chunk.voxels = self.voxels[chunk_idx]
 
     def render(self) -> None:
         for chunk in self.chunks:
             if chunk is not None:
+                if chunk.voxels is None:
+                    x, y, z = chunk.position
+                    chunk_idx = x + WORLD.WIDTH * z + WORLD.AREA * y
+                    self.voxels[chunk_idx] = chunk._build_voxels()
+                    chunk.voxels = self.voxels[chunk_idx]
                 chunk.render()
 
     def update(self) -> None:

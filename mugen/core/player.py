@@ -48,3 +48,33 @@ class Player(Camera):
         for keys, func in _key_map.items():
             if any(key[k] for k in keys):
                 func(velocity)
+
+    def move_forward(self, offset: float) -> None:
+        if self.app._scene.world.chunk_manager.check_collision("forward"):
+            return
+        super().move_forward(offset)
+
+    def move_backward(self, offset: float) -> None:
+        if self.app._scene.world.chunk_manager.check_collision("backward"):
+            return
+        super().move_backward(offset)
+
+    def move_left(self, offset: float) -> None:
+        if self.app._scene.world.chunk_manager.check_collision("left"):
+            return
+        super().move_left(offset)
+
+    def move_right(self, offset: float) -> None:
+        if self.app._scene.world.chunk_manager.check_collision("right"):
+            return
+        super().move_right(offset)
+
+    def move_up(self, offset: float) -> None:
+        if self.app._scene.world.chunk_manager.check_collision("up"):
+            return
+        super().move_up(offset)
+
+    def move_down(self, offset: float) -> None:
+        if self.app._scene.world.chunk_manager.check_collision("down"):
+            return
+        super().move_down(offset)

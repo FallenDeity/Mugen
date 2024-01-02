@@ -2,7 +2,7 @@
 
 layout (location = 0) in uint packed_data;
 
-int x, y, z, voxel_id, face_id, ao_id, flip_id;
+int x, y, z, ao_id, flip_id;
 
 uniform mat4 uProjection;
 uniform mat4 uView;
@@ -11,6 +11,8 @@ uniform mat4 uModel;
 out vec3 voxel_color;
 out vec2 voxel_uv;
 out float shade;
+out vec3 frag_world_pos;
+flat out int voxel_id, face_id;
 
 const float ao_shades[4] = float[](
     0.7, 0.8, 0.9, 1.0
@@ -26,7 +28,7 @@ const int uv_indices[24] = int[](
 );
 const float shading[6] = float[](
     // top bottom right left back front
-    1.0, 0.7, 0.8, 0.8, 0.7, 0.9
+    0.8, 0.5, 0.6, 0.6, 0.5, 0.7
 );
 
 vec3 colorHash(float idx) {
@@ -55,5 +57,6 @@ void main() {
     int uv_idx = gl_VertexID % 6 + ((face_id & 1) + flip_id * 2) * 6;
     voxel_uv = uv_coords[uv_indices[uv_idx]];
     shade = shading[face_id] * ao_shades[ao_id];
+    frag_world_pos = (uModel * vec4(in_position, 1.0)).xyz;
     gl_Position = uProjection * uView * uModel * vec4(in_position, 1.0);
 }

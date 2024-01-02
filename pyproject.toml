@@ -12,6 +12,7 @@ moderngl = "^5.9.0"
 pyglm = "^2.7.1"
 numba = "^0.58.1"
 python-dotenv = "^1.0.0"
+opensimplex = "^0.4.5"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"

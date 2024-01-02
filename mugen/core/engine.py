@@ -16,6 +16,7 @@ __all__: tuple[str, ...] = ("Mugen",)
 
 class Mugen:
     _logger: Logger = Logger(name="Mugen", file_logging=False)
+    _start_time: float = pygame.time.get_ticks() / 1000.0
 
     def __init__(self) -> None:
         self._logger.info("Initializing Mugen...")
@@ -62,10 +63,11 @@ class Mugen:
         self._delta_time = self.clock.tick(WINDOW.FPS) / 1000.0
         self._time += self._delta_time
         pygame.display.set_caption(f"{WINDOW.TITLE} | FPS: {self.clock.get_fps():.2f}")
-        self._logger.debug(f"FPS: {self.clock.get_fps():.2f}")
+        time_running = pygame.time.get_ticks() / 1000.0 - self._start_time
+        self._logger.debug(f"FPS: {self.clock.get_fps():.2f} | Total time: {time_running:.2f}s")
 
     def render(self) -> None:
-        self.ctx.clear(14 / 255, 50 / 255, 95 / 255)
+        self.ctx.clear(0.58, 0.83, 0.99)
         self._scene.render()
         pygame.display.flip()
 

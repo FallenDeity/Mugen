@@ -31,7 +31,6 @@ class VoxelMarker:
 
     def render(self) -> None:
         if self.chunk_manager.voxel_id:
-            print(self.position)
             self.set_uniform()
             self.mesh.render()
 
