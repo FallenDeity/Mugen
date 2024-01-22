@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 pygame = "^2.5.2"
-moderngl = "^5.9.0"
+moderngl = "^5.10.0"
 pyglm = "^2.7.1"
 numba = "^0.58.1"
 python-dotenv = "^1.0.0"
