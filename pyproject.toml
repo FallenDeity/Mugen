@@ -10,7 +10,7 @@ python = "^3.11"
 pygame = "^2.5.2"
 moderngl = "^5.9.0"
 pyglm = "^2.7.1"
-numba = "^0.58.1"
+numba = "^0.59.0"
 python-dotenv = "^1.0.0"
 opensimplex = "^0.4.5"
 
